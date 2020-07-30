@@ -1,0 +1,27 @@
+{
+  "name": "kubeecms/kcms-media",
+  "description": "Organize media files into folders/ categories at ease.",
+  "keywords": ["kcms-media", "media-library", "kcms", "kubee"],
+  "type": "wordpress-plugin",
+  "homepage": "https://github.com/KubeeCMS/KCMS-Media/",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "KubeeCMS",
+      "homepage": "https://github.com/KubeeCMS/KCMS-Media/",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/KubeeCMS/KCMS-Media/issues/",
+    "source": "https://github.com/KubeeCMS/KCMS-Media/"
+  },
+  "autoload": {
+    "psr-4": {
+      "Kubeecms\\Kcms-Media\\Filebird\\": "assets/dist/"
+    }
+  },
+  "require": {
+    "php": ">=7.3"
+  }
+}
