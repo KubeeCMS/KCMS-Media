@@ -1,4 +1,4 @@
-<p>
+<div style="margin-bottom: 10px">
   <label for="fbv"><?php _e('Choose Folder: ', 'filebird') ?></label>
   <div id="fbv-folder-selector" class="fbv-folder-selector" name="fbv"></div>
   <!-- <select name="fbv" id="fbv" class="fbv"> -->
@@ -8,4 +8,4 @@
     // }
   ?>
   <!-- </select> -->
-</p>
+</div>

@@ -7,11 +7,11 @@ use FileBird\Model\Folder as FolderModel;
 
 class Tree {
 
-    public static function getFolders($order_by = null) {
+    public static function getFolders($order_by = null, $flat = false) {
         $folders_from_db = FolderModel::allFolders('*', null, $order_by);
         $default_folders = array();
         
-        $tree = self::getTree($folders_from_db, 0, $default_folders);
+        $tree = self::getTree($folders_from_db, 0, $default_folders, $flat);
         return $tree;
     }
     public static function getCount($folder_id) {
@@ -31,20 +31,30 @@ class Tree {
         wp_reset_postdata();
         return $count;
     }
-    private static function getTree($data, $parent = 0, $default = null) {
-        $tree = is_null($default) ? array() : $default;
-        foreach($data as $k => $v) {
-          if($v->parent == $parent) {
-            $tree[] = array(
-              'id' => (int)$v->id,
-              'text' => $v->name,
-              'children' => self::getTree($data, $v->id, null),
-              'li_attr' => array("data-count" => self::getCount((int)$v->id), "data-parent" => (int)$parent),
-              'count' => self::getCount((int)$v->id)
-            );
+    private static function getTree($data, $parent = 0, $default = null,  $flat = false) {
+      $tree = is_null($default) ? array() : $default;
+      foreach($data as $k => $v) {
+        if($v->parent == $parent) {
+          $children = self::getTree($data, $v->id, null);
+          $f = array(
+            'id' => (int)$v->id,
+            'text' => $v->name,
+            'li_attr' => array("data-count" => self::getCount((int)$v->id), "data-parent" => (int)$parent),
+            'count' => self::getCount((int)$v->id)
+          );
+           
+          if($flat === true) {
+            $tree[] = $f;
+            foreach ($children as $k2 => $v2) {
+              $tree[] = $v2;
+            }
+          } else {
+            $f['children'] = $children;
+            $tree[] = $f;
           }
         }
-        return $tree;
-    }
+      }
+      return $tree;
+  }
 
 }

@@ -15,7 +15,7 @@
  * Plugin Name:  KCMS Media
  * Plugin URI:   https://github.com/KubeeCMS/KCMS-Media/
  * Description:  Organize media files into folders/ categories at ease.
- * Version:      4.0.1
+ * Version:      4.0.4
  * Author:       KubeeCMS - KUBEE
  * Author URI:   https://github.com/KubeeCMS/
  * License:      GPL-2.0-or-later
@@ -47,19 +47,6 @@
 
 namespace FileBird;
 
-
-/**
- * Prevent direct access to this file.
- *
- * @since 1.4.0
- */
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 'Sorry, you are not allowed to access this file directly.' );
-}
-
-
-
-
 defined('ABSPATH') || exit;
 
 if (!defined('NJFB_PREFIX')) {
@@ -67,7 +54,11 @@ if (!defined('NJFB_PREFIX')) {
 }
 
 if (!defined('NJFB_VERSION')) {
-  define('NJFB_VERSION', '4.0.1');
+  define('NJFB_VERSION', '4.0.4');
+}
+
+if (!defined('NJFB_PLUGIN_FILE')) {
+  define('NJFB_PLUGIN_FILE', __FILE__);
 }
 
 if (!defined('NJFB_PLUGIN_URL')) {
@@ -121,6 +112,7 @@ function init() {
   Classes\PageBuilders::getInstance();
   Classes\Feedback::getInstance();
   Classes\Review::getInstance();
+  //Classes\Upgrade::getInstance();
 
   Page\Settings::getInstance();
   Controller\Folder::getInstance();
@@ -134,3 +126,7 @@ add_action('plugins_loaded', 'FileBird\\init');
 
 register_activation_hook(__FILE__, array('FileBird\\Plugin', 'activate'));
 register_deactivation_hook(__FILE__, array('FileBird\\Plugin', 'deactivate'));
+
+if ( function_exists( 'register_block_type' ) ) {
+  require plugin_dir_path(__FILE__) . 'blocks/filebird-gallery/src/init.php';
+}

@@ -105,7 +105,16 @@ class Folder {
   }
   public static function detail($name, $parent, $select = 'id') {
     global $wpdb;
-    return $wpdb->get_row("SELECT * FROM " . self::getTable(self::$folder_table) . " WHERE `name` = '".$name."' AND `parent` = '".(int)$parent."'");
+    
+    $query = "SELECT * FROM " . self::getTable(self::$folder_table) . " WHERE `name` = '".$name."' AND `parent` = '".(int)$parent."'";
+
+    $user_has_own_folder = get_option('njt_fbv_folder_per_user', '0') === '1';
+    if($user_has_own_folder) {
+      $query .= " AND `created_by` = " . get_current_user_id();
+    } else {
+      $query .= " AND `created_by` = 0";
+    }
+    return $wpdb->get_row($query);
   }
   public static function updateFolderName($new_name, $parent, $folder_id) {
     global $wpdb;
@@ -132,6 +141,10 @@ class Folder {
       array('%d'),
       array('%d')
     );
+  }
+  public static function deleteAll() {
+    global $wpdb;
+    $wpdb->query("DELETE FROM " . self::getTable(self::$folder_table));
   }
   public static function deleteFolderAndItsChildren($id) {
     global $wpdb;
@@ -174,8 +187,8 @@ class Folder {
       'post__not_in' => array(),
       'post__in' => array()
     );
-    if($fbv != -1) {//skip if fbv == -1 (load all)
-      if($fbv == 0) {
+    if($fbv !== -1) {//skip if fbv == -1 (load all)
+      if($fbv === 0) {
         //load uncategorized folder
         $where = "`folder_id` IN (SELECT `id` FROM ".self::getTable(self::$folder_table)." WHERE `created_by` = '0')";
         $where = apply_filters('fbv_in_not_in_uncategorized_where', $where, self::getTable(self::$folder_table));
@@ -188,7 +201,10 @@ class Folder {
         $query['post__not_in'] = $attachment_ids;
       } else {
         if(apply_filters('fbv_can_get_in_not_in', true, $fbv)) {
-          $results = $wpdb->get_results("SELECT `attachment_id` FROM " . self::getTable(self::$relation_table) . " WHERE `folder_id` = " . $fbv);
+          if( ! is_array($fbv)) {
+            $fbv = array($fbv);
+          }
+          $results = $wpdb->get_results("SELECT `attachment_id` FROM " . self::getTable(self::$relation_table) . " WHERE `folder_id` IN (".implode(',', $fbv).")");
           $attachment_ids = array();
           foreach ($results as $k => $v) {
             $attachment_ids[] = $v->attachment_id;

@@ -53,7 +53,7 @@ class I18n {
       'are_you_sure_delete' => __('Are you sure you want to delete', 'filebird'),
       'are_you_sure' => __('Are you sure?', 'filebird'),
       'all_files_will_move' => __('Those files will be moved to <strong>Uncategorized</strong> folder.', 'filebird'),
-      'editing_warning' => __('You are editing another folder! Please done the task!', 'filebird'),
+      'editing_warning' => __('You are editing another folder! Please complete the task first!', 'filebird'),
       'sort_folders' => __('Sort Folders', 'filebird'),
       'delete_folder' => __('Delete Folder', 'filebird'),
       'sort_files' => __('Sort Files', 'filebird'),
@@ -61,7 +61,7 @@ class I18n {
       'all_files' => __('All Files', 'filebird'),
       'uncategorized' => __('Uncategorized', 'filebird'),
       'rename' => __('Rename', 'filebird'),
-      'are_you_sure_delete_this_folder' => __('Are you sure you want to delete this folder?', 'filebird'),
+      'are_you_sure_delete_this_folder' => __('Are you sure you want to delete this folder? Those files will be moved to <strong>Uncategorized</strong> folder.', 'filebird'),
       'sort_ascending' => __('Sort Ascending', 'filebird'),
       'sort_descending' => __('Sort Descending', 'filebird'),
       'reset' => __('Reset', 'filebird'),
@@ -108,6 +108,13 @@ class I18n {
         </ul>', 'filebird'),
       'pagebuilder_support' => __('Including Divi, Fusion, Thrive Architect, WPBakery...', 'filebird'),
       'upgrade_to_pro' => __('Upgrade to FileBird Pro now', 'filebird'),
+      'success' => __('Success.', 'filebird'),
+      'filebird_db_updated' => __('Congratulations. Successfully imported!', 'filebird'),
+      'go_to_media' => __('Go To Media', 'filebird'),
+      'update_noti_title' => __('FileBird 4 Update Required', 'filebird'),
+      'update_noti_desc' => __('You\'re using the new FileBird 4. Please import database to view your folders correctly.', 'filebird'),
+      'update_noti_btn' => __('Import now', 'filebird'),
+      'import_failed' => __('Import failed. Please try again or contact our support https://ninjateam.org/support.', 'filebird')
     );
     return $translation;
   }

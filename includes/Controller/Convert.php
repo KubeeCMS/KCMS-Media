@@ -17,10 +17,19 @@ class Convert {
   public function __construct() {
   }
 
-  public static function insertToNewTable($folders = null, $parent = 0) {
+  public static function insertToNewTable($folders = null) {
     global $wpdb;
     if(is_null($folders)) $folders = Convert::getOldFolers();
     foreach($folders as $k => $folder) {
+      if(is_array($folder)) {
+        $folder = json_decode(json_encode($folder));
+      }
+
+      $parent = $folder->parent;
+      if($parent > 0) {
+        $parent = get_term_meta($parent, 'new_fbv_id', true);
+      }
+
       $check = self::detail($folder->name, $parent);
       $insert_id = 0;
       if(is_null($check)) {
@@ -38,14 +47,13 @@ class Convert {
         foreach($folder->attachments as $k2 => $attachment_id) {
           $post = get_post($attachment_id);
           if(is_object($post) && $post->post_type == 'attachment') {
-            self::setFolder($attachment_id, $insert_id, true);
+            self::setFolder($attachment_id, $insert_id, false);
           }
         }
       }
-      if(isset($folder->children)) {
-        self::insertToNewTable($folder->children, $insert_id);
-      }
-      
+      //update new_fbv_id for this term
+      update_term_meta($folder->id, 'new_fbv_id', $insert_id);
+
     }
   }
   private static function setFolder($ids, $folder, $delete_first = false) {
@@ -64,7 +72,18 @@ class Convert {
   }
   private static function detail($name, $parent) {
     global $wpdb;
-    $check = $wpdb->get_results("SELECT id FROM " . self::getTable(self::$folder_table) . " WHERE `name` = '".$name."' AND `parent` = '".$parent."'");
+
+    $query = "SELECT id FROM " . self::getTable(self::$folder_table) . " WHERE `name` = '".$name."' AND `parent` = '".$parent."'";
+
+    $user_has_own_folder = get_option('njt_fbv_folder_per_user', '0') === '1';
+    if($user_has_own_folder) {
+      $query .= " AND created_by = " . get_current_user_id();
+    } else {
+      $query .= " AND created_by = 0";
+    }
+
+    $check = $wpdb->get_results($query);
+    
     if($check != null && count($check) > 0) {
       return $check[0];
     } else {
@@ -87,14 +106,22 @@ class Convert {
     $query = "SELECT t.term_id as id, t.name FROM $wpdb->terms as t LEFT JOIN $wpdb->term_taxonomy as tt ON (t.term_id = tt.term_id) WHERE parent = $parent and taxonomy = 'nt_wmc_folder'";
     $folders = $wpdb->get_results($query);
     foreach($folders as $k => $v) {
-      $folders[$k]->children = self::_getOldFolers($v->id);
+      $folders[$k]->parent = $parent;
       $folders[$k]->attachments = self::_getAttachments($v->id);
+    }
+    foreach($folders as $k => $v) {
+      $children = self::_getOldFolers($v->id);
+      foreach($children as $k2 => $v2) {
+        $folders[] = $v2;
+      }
     }
     return $folders;
   }
   private static function _getAttachments($term_id) {
     global $wpdb;
-    $query = "SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id = " . $term_id;
+    $term_taxonomy_id = $wpdb->get_var("SELECT term_taxonomy_id FROM $wpdb->term_taxonomy WHERE term_id = $term_id");
+    $query = "SELECT object_id FROM $wpdb->term_relationships WHERE term_taxonomy_id = " . $term_taxonomy_id;
+    
     $_data = $wpdb->get_results($query);
     $ids = array();
     foreach($_data as $k => $v) {

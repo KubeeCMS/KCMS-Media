@@ -1,7 +1,7 @@
 <?php
 namespace FileBird\Controller;
 
-//use FileBird\Controller\Convert as ConvertController;
+use FileBird\Controller\Convert as ConvertController;
 
 use FileBird\Model\Folder as FolderModel;
 use FileBird\Classes\Helpers as Helpers;
@@ -38,20 +38,56 @@ class Folder extends Controller {
   public function adminNotices()
   {
     global $pagenow;
-    $showInPages = array('upload.php', 'plugins.php');
-    if (FolderModel::countFolder() > 0 || !in_array($pagenow, $showInPages)) {
-      return;
+    //welcome to new filebird message
+    $notShownInPages = array('upload.php');
+    if ((int)FolderModel::countFolder() == 0 && !in_array($pagenow, $notShownInPages)) {
+      ?>
+      <div class="notice notice-info is-dismissible" id="filebird-empty-folder-notice">
+        <p>
+          <?php _e('Create your first folder for media library now.', 'filebird')?>
+          <a href="<?php echo esc_url(admin_url('/upload.php')) ?>">
+            <strong><?php _e('Get Started', 'filebird')?></strong>
+          </a>
+        </p>
+      </div>
+      <?php
     }
-    ?>
-    <div class="notice notice-info is-dismissible">
-      <p>
-        <?php _e('Create your first folder for media library now.', 'filebird')?>
-        <a href="<?php echo esc_url(admin_url('/upload.php')) ?>">
-          <strong><?php _e('Get Started', 'filebird')?></strong>
-        </a>
-      </p>
-    </div>
-    <?php
+    //import from old folders message
+    $is_converted = get_option('fbv_old_data_updated_to_v4', '0');
+    if($is_converted !== '1') {
+      $old_folder_count = count(ConvertController::getOldFolers());
+      $style = '';
+      if ($pagenow === 'upload.php') $style = 'display: none';
+      if ($pagenow === 'options-general.php') {
+        if ( isset($_GET['page']) && isset($_GET['tab']) &&
+            sanitize_text_field($_GET['page']) === 'filebird-settings' &&
+            sanitize_text_field($_GET['tab']) === 'update-db'
+        ) $style = 'display: none';
+      }
+      if($old_folder_count > 0 && !isset($_GET['autorun'])) {
+        ?>
+        <div style="<?php echo esc_attr($style) ?>" class="notice notice-warning is-dismissible njt-fb-update-db-noti" id="njt-fb-update-db-noti">
+          <div class="njt-fb-update-db-noti-item">
+            <h3><?php _e('FileBird 4 Update Required', 'filebird'); ?></h3>
+          </div>
+          <div class="njt-fb-update-db-noti-item">
+            <p>
+              <?php _e('You\'re using the new FileBird 4. Please update database to view your folders correctly.', 'filebird'); ?>
+            </p>
+          </div>
+          <div class="njt-fb-update-db-noti-item">
+            <p>
+            <a class="button button-primary" href="<?php echo esc_url(add_query_arg(array('page' => 'filebird-settings', 'tab' => 'update-db', 'autorun' => 'true'), admin_url('/options-general.php'))); ?>">
+              <strong><?php _e('Update now', 'filebird')?></strong>
+            </a>
+            </p>
+          </div>
+        </div>
+        <?php
+      }
+    }
+    
+
   }
   public function registerRestFields() {
     register_rest_route(NJFB_REST_URL,
@@ -62,6 +98,15 @@ class Folder extends Controller {
           'permission_callback' => array($this, 'resPermissionsCheck'),
         )
     );
+    register_rest_route(NJFB_REST_URL,
+        'gutenberg-get-folders',
+        array(
+          'methods' => 'GET',
+          'callback' => array($this, 'ajaxGutenbergGetFolder'),
+          'permission_callback' => array($this, 'resPermissionsCheck'),
+        )
+    );
+
     register_rest_route(NJFB_REST_URL,
         'new-folder',
         array(
@@ -131,7 +176,6 @@ class Folder extends Controller {
 
   public function enqueueAdminScripts($screenId) {
     if (function_exists('get_current_screen')) {
-      $current_screen = get_current_screen();
       if ($screenId == "upload.php") {
         wp_register_script('jquery-resizable', NJFB_PLUGIN_URL . 'assets/js/jquery-resizable.min.js' );
         wp_enqueue_script('jquery-resizable');
@@ -141,18 +185,17 @@ class Folder extends Controller {
     wp_enqueue_script('jquery-ui-draggable');
     wp_enqueue_script('jquery-ui-droppable');
 
+    if($screenId == 'settings_page_filebird-settings') {
+      wp_enqueue_script('toastr', NJFB_PLUGIN_URL . 'assets/js/toastr/toastr.min.js', array(), '2.1.3', false);
+      wp_enqueue_script('fbv-import', NJFB_PLUGIN_URL . 'assets/js/import.js', array('jquery', 'toastr'), NJFB_VERSION, false);
+      wp_enqueue_style('toastr', NJFB_PLUGIN_URL . 'assets/js/toastr/toastr.min.css', array(), '2.1.3');
+    }
 
     wp_enqueue_script('fbv-folder', NJFB_PLUGIN_URL . 'assets/dist/app.js', array(), NJFB_VERSION, false);
-    wp_enqueue_script('fbv-import', NJFB_PLUGIN_URL . 'assets/js/import.js', array('jquery'), NJFB_VERSION, false);
     wp_enqueue_script('fbv-lib', NJFB_PLUGIN_URL . 'assets/js/jstree/jstree.min.js', array(), NJFB_VERSION, false);
-    
+
     wp_enqueue_style('fbv-folder', NJFB_PLUGIN_URL . 'assets/dist/app.css', array(), NJFB_VERSION);
     wp_style_add_data('fbv-folder', 'rtl', 'replace');
-
-    // wp_enqueue_style('fbr-lib-css', NJFB_PLUGIN_URL . 'apps/src/themes/filebird/fbstyles.css', array(), NJFB_VERSION);
-    // wp_enqueue_style('fbr-lib-css', NJFB_PLUGIN_URL . 'assets/js/jstree/themes/default/style.min.css', array(), NJFB_VERSION);
-    // wp_enqueue_style('fbr-lib-css', NJFB_PLUGIN_URL . 'assets/js/jstree/themes/default/style.min.css', array(), NJFB_VERSION);
-    // wp_enqueue_style('fbr-lib-css', NJFB_PLUGIN_URL . 'assets/js/jstree/themes/default/style.min.css', array(), NJFB_VERSION);
 
     // $folders_from_db = FolderModel::allFolders('*', null, null);
     // $tree = $this->getTree($folders_from_db, 0, array());
@@ -160,14 +203,16 @@ class Folder extends Controller {
     wp_localize_script('fbv-folder', 'fbv_data', array(
       'nonce' => wp_create_nonce('fbv_nonce'),
       'rest_nonce' => wp_create_nonce('wp_rest'),
-      'nonce_error' => __('Could not proccess your request.', 'filebird'),
+      'nonce_error' => __('Your request can\'t be processed.', 'filebird'),
       'current_folder' => ((isset($_GET['fbv'])) ? (int)sanitize_text_field($_GET['fbv']) : -1), //-1: all files. 0: uncategorized
       'folders' => FolderModel::allFolders('id as term_id, name as term_name', array('term_id', 'term_name')),
       'relations' => FolderModel::getRelations(),
       // 'is_upload' => $current_screen != null && $current_screen->id === 'upload' ? 1 : 0,
       'i18n' => i18n::getTranslation(),
       'media_mode' => get_user_option('media_library_mode', get_current_user_id()),
-      'json_url' => rest_url(NJFB_REST_URL),
+      'json_url' => apply_filters('filebird_json_url', rest_url(NJFB_REST_URL)),
+      'media_url' => admin_url('upload.php'),
+      'auto_import_url' => esc_url(add_query_arg(array('page' => 'filebird-settings', 'tab' => 'update-db', 'autorun' => 'true'), admin_url('/options-general.php')))
     ));
   }
 
@@ -238,7 +283,13 @@ class Folder extends Controller {
 
   public function ajaxQueryAttachmentsArgs($query) {
     if(isset($_REQUEST['query']['fbv'])) {
-      $fbv = (int)sanitize_text_field($_REQUEST['query']['fbv']);
+      $fbv = $_REQUEST['query']['fbv'];
+      if(is_array($fbv)) {
+        $fbv = array_map('intval', $fbv);
+      } else {
+        $fbv = intval($fbv);
+      }
+
       $in_not_in = FolderModel::getInAndNotInIds($fbv);
       if(!isset($query['post__not_in'])) {
         $query['post__not_in'] = array();
@@ -252,11 +303,12 @@ class Folder extends Controller {
     return $query;
   }
   public function ajaxGetFolder() {
-    //check_ajax_referer('fbv_nonce', 'nonce', true);
-    if(get_option('fbv_old_data_updated_to_v4', '0') !== '1') {
-      Convert::insertToNewTable();
-      update_option('fbv_old_data_updated_to_v4', '1');
-    }
+    
+    // if(get_option('fbv_old_data_updated_to_v4', '0') !== '1') {
+    //   Convert::insertToNewTable();
+    //   update_option('fbv_old_data_updated_to_v4', '1');
+    // }
+    
     $order_by = null;
     $sort_option = 'reset';
 
@@ -280,7 +332,7 @@ class Folder extends Controller {
       }
     }
     
-    $tree = Tree::getFolders($order_by);
+    $tree = Tree::getFolders($order_by, false);
     
     wp_send_json_success(array(
       'tree' => $tree,
@@ -289,6 +341,24 @@ class Folder extends Controller {
         '0' => Tree::getCount(0)
       )
     ));
+  }
+  public function ajaxGutenbergGetFolder() {
+    $_folders = Tree::getFolders(null, true);
+    $folders = array(
+      array(
+        'value' => 0,
+        'label' => __('Please choose folder', 'filebird'),
+        'disabled' => true
+      )
+    );
+    foreach($_folders as $k => $v) {
+      $folders[] = array(
+        'value' => $v['id'],
+        'label' => $v['text']
+      );
+    }
+    
+    wp_send_json_success($folders);
   }
   public function ajaxNewFolder() {
     //check_ajax_referer('fbv_nonce', 'nonce', true);
@@ -384,7 +454,7 @@ class Folder extends Controller {
     if($tree != '') {
       FolderModel::rawInsert('(id, ord, parent) VALUES ' . $tree . ' ON DUPLICATE KEY UPDATE ord=VALUES(ord),parent=VALUES(parent)');
       wp_send_json_success(array(
-        'mess' => __('Tree\'s been updated', 'filebird')
+        'mess' => __('Folder tree has been updated.', 'filebird')
       ));
     }
     wp_send_json_error(array(

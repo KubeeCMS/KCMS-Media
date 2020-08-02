@@ -179,14 +179,17 @@ class Convert {
       }
 
       public function ajaxGetOldData() {
+        $folders = ConvertController::getOldFolers();
+        $folders_chunk = array_chunk($folders, 20);
         wp_send_json_success(array(
-          'folders' => ConvertController::getOldFolers()
+          'folders' => $folders_chunk
         ));
       }
-      public function ajaxInsertOldData() {
-        $folder = isset($_POST['folder']) ? $_POST['folder'] : '';
-        if($folder != '') {
-          ConvertController::insertToNewTable(array($folder));
+      public function ajaxInsertOldData($request) {
+        $folders = isset($request) ? $request->get_params()['folders'] : '';
+        if($folders != '') {
+          ConvertController::insertToNewTable($folders);
+          update_option('fbv_old_data_updated_to_v4', '1');
           wp_send_json_success(array('mess' => __('success', 'filebird')));
         } else {
           wp_send_json_error(array('mess' => __('validation failed', 'filebird')));
@@ -205,7 +208,7 @@ class Convert {
           $wpdb->query($query);
         }
         wp_send_json_success(array(
-          'mess' => __('Success', 'filebird')
+          'mess' => __('Successfully wiped.', 'filebird')
         ));
       }
       public function ajaxClearAllData() {
@@ -219,7 +222,7 @@ class Convert {
           update_option('njt_fb_updated_from_wpmf', '0');
           update_option('njt_fb_updated_from_realmedia', '0');
           wp_send_json_success(array(
-            'mess' => __('Success', 'filebird')
+            'mess' => __('Successfully cleared.', 'filebird')
           ));
         } else {
           wp_send_json_error(array(
@@ -272,26 +275,28 @@ class Convert {
     //     ));
     //     exit();
     // }
-    public function ajaxImport() {
+    public function ajaxImport($request) {
       global $wpdb;
-      $site = isset($_POST['site']) ? sanitize_text_field($_POST['site']) : '';
-      $count = isset($_POST['count']) ? sanitize_text_field($_POST['count']) : '';
+      $site = isset($request) ? sanitize_text_field($request->get_params()['site']) : '';
+      //$count = isset($request) ? sanitize_text_field($request->get_params()['count']) : '';
 
       $this->beforeGettingNewFolders($site);
       $folders = $this->getOldFolders($site, true);
+      $count = count($folders);
       $folders = array_chunk($folders, 20);
 
       wp_send_json_success(array(
         'folders' => $folders,
+        'count' => $count,
         'site' => $site
       ));
       exit();
     }
-    public function ajaxImportInsertFolder() {
+    public function ajaxImportInsertFolder($request) {
       global $wpdb;
 
-      $site = isset($_POST['site']) ? sanitize_text_field($_POST['site']) : '';
-      $folders = isset($_POST['folders']) ? $this->sanitize_arr($_POST['folders']) : '';
+      $site = isset($request) ? sanitize_text_field($request->get_params()['site']) : '';
+      $folders = isset($request) ? $this->sanitize_arr($request->get_params()['folders']) : '';
 
       $this->insertFolderAndItsAtt($site, $folders);
 
@@ -301,11 +306,11 @@ class Convert {
     public function ajaxImportAfterInserting() {
       global $wpdb;
       $site = isset($_POST['site']) ? sanitize_text_field($_POST['site']) : '';
-
+      $count = isset($request) ? sanitize_text_field($request->get_params()['count']) : '';
       $this->afterInsertingNewFolders($site);
       $this->updateUpdated($site);
 
-      $mess = sprintf(__('Congratulations! We imported successfully %1$s folders into <strong>FileBird.</strong>', 'filebird'), $count);
+      $mess = sprintf(__('Congratulations! We imported successfully %1$d folders into <strong>FileBird.</strong>', 'filebird'), $count);
       wp_send_json_success(array(
           'mess' => $mess
       ));

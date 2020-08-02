@@ -33,8 +33,8 @@ class Settings {
   public function settingsMenu() {
     add_submenu_page(
       'options-general.php',
-      __('FileBird Settings', 'filebird'),
-      __('FileBird Settings', 'filebird'),
+      __('FileBird', 'filebird'),
+      __('FileBird', 'filebird'),
       'manage_options',
       $this->getPageId(),
       array($this, 'settingsPage')
