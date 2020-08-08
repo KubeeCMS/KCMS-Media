@@ -111,7 +111,7 @@ function init() {
   Classes\Convert::getInstance();
   Classes\PageBuilders::getInstance();
   Classes\Feedback::getInstance();
-  Classes\Review::getInstance();
+  //Classes\Review::getInstance();
   //Classes\Upgrade::getInstance();
 
   Page\Settings::getInstance();
