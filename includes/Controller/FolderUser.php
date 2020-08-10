@@ -47,7 +47,8 @@ class FolderUser extends Controller {
   public function actionBeforeSettingFolder($post_id, $folder_id) {
     global $wpdb;
     if($this->is_enabled) {
-      $wpdb->query($wpdb->prepare('DELETE FROM %1$sfbv_attachment_folder WHERE `attachment_id` = %2$d AND `folder_id` IN (SELECT `id` FROM %1$sfbv WHERE `created_by` = %3$d)', $wpdb->prefix, $post_id, $this->current_user_id));
+      $query = sprintf('DELETE FROM %1$sfbv_attachment_folder WHERE `attachment_id` = %2$d AND `folder_id` IN (SELECT `id` FROM %1$sfbv WHERE `created_by` = %3$d)', $wpdb->prefix, $post_id, $this->current_user_id);
+      $wpdb->query($query);
     } else {
       $wpdb->query(sprintf('DELETE FROM %1$sfbv_attachment_folder WHERE `attachment_id` = %2$d AND `folder_id` IN (SELECT `id` FROM %1$sfbv WHERE `created_by` = 0)', $wpdb->prefix, $post_id));
     }

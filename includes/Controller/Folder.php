@@ -185,7 +185,7 @@ class Folder extends Controller {
     wp_enqueue_script('jquery-ui-draggable');
     wp_enqueue_script('jquery-ui-droppable');
 
-    if($screenId == 'settings_page_filebird-settings') {
+    if ( $screenId !== 'pagebuilders' ) {
       wp_enqueue_script('toastr', NJFB_PLUGIN_URL . 'assets/js/toastr/toastr.min.js', array(), '2.1.3', false);
       wp_enqueue_script('fbv-import', NJFB_PLUGIN_URL . 'assets/js/import.js', array('jquery', 'toastr'), NJFB_VERSION, false);
       wp_enqueue_style('toastr', NJFB_PLUGIN_URL . 'assets/js/toastr/toastr.min.css', array(), '2.1.3');
@@ -343,7 +343,7 @@ class Folder extends Controller {
     ));
   }
   public function ajaxGutenbergGetFolder() {
-    $_folders = Tree::getFolders(null, true);
+    $_folders = Tree::getFolders(null, true, 0, true);
     $folders = array(
       array(
         'value' => 0,

@@ -2,9 +2,9 @@
 msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"Project-Id-Version: FileBird Lite\n"
-"POT-Creation-Date: 2020-07-31 17:10+0700\n"
-"PO-Revision-Date: 2020-07-31 17:09+0700\n"
+"Project-Id-Version: FileBird\n"
+"POT-Creation-Date: 2020-08-10 17:56+0700\n"
+"PO-Revision-Date: 2020-08-10 17:56+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,6 +20,94 @@ msgstr ""
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "delete_folder"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "are_you_sure_delete"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "folders"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "folder"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "delete"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "cancel"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "rename"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "bulk_select"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "folder_limit_reached"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "upgrade_to_pro"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "new_folder"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "all_files"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "uncategorized"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "update_noti_title"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "update_noti_desc"
+msgstr ""
+
+#: assets/dist/app-rtl.js:18 assets/dist/app.js:18
+msgid "update_noti_btn"
+msgstr ""
+
+#: assets/dist/app.js:24
+msgid "modal"
+msgstr ""
+
+#: assets/dist/app.js:29
+msgid "quick_feedback"
+msgstr ""
+
+#: assets/dist/app.js:29
+msgid "deactivate_sadly"
+msgstr ""
+
+#: assets/dist/app.js:29
+msgid "thank_you_so_much"
+msgstr ""
+
+#: assets/dist/app.js:29
+msgid "deactivate"
+msgstr ""
+
+#: assets/dist/app.js:29
+msgid "skip_and_deactivate"
+msgstr ""
 
 #: includes/Classes/Convert.php:128
 msgid "Import categories to FileBird"
@@ -126,7 +214,7 @@ msgstr ""
 msgid "Get Started"
 msgstr ""
 
-#: includes/Controller/Folder.php:71 includes/I18n.php:115
+#: includes/Controller/Folder.php:71 includes/I18n.php:114
 msgid "FileBird 4 Update Required"
 msgstr ""
 
@@ -352,72 +440,68 @@ msgid "Thank you so much!"
 msgstr ""
 
 #: includes/I18n.php:84
-msgid "I've purchased FileBird Pro."
-msgstr ""
-
-#: includes/I18n.php:85
 msgid "It doesn't have the features I'm looking for."
 msgstr ""
 
-#: includes/I18n.php:86
+#: includes/I18n.php:85
 msgid "Not work with my theme or other plugins."
 msgstr ""
 
-#: includes/I18n.php:87
+#: includes/I18n.php:86
 msgid "Found another plugin that works better."
 msgstr ""
 
-#: includes/I18n.php:88
+#: includes/I18n.php:87
 msgid "Don't know how to use it."
 msgstr ""
 
-#: includes/I18n.php:89
+#: includes/I18n.php:88
 msgid "This is just temporary, I will use it again."
 msgstr ""
 
-#: includes/I18n.php:90
+#: includes/I18n.php:89
 msgid "Other"
 msgstr ""
 
-#: includes/I18n.php:92
+#: includes/I18n.php:91
 msgid "Which features please?"
 msgstr ""
 
-#: includes/I18n.php:93
+#: includes/I18n.php:92
 msgid "Please tell us which one"
 msgstr ""
 
-#: includes/I18n.php:94
+#: includes/I18n.php:93
 msgid ""
 "Please read FileBird documentation <a target=\"_blank\" href=\"https://"
 "ninjateam.gitbook.io/filebird/\">here</a> or <a target=\"_blank\" href="
 "\"https://ninjateam.org/support/\">chat with us</a> if you need help"
 msgstr ""
 
-#: includes/I18n.php:95
+#: includes/I18n.php:94
 msgid ""
 "Please <a target=\"_blank\" href=\"https://ninjateam.org/support/\">ask for "
 "support here</a>, we will fix it for you."
 msgstr ""
 
-#: includes/I18n.php:96
+#: includes/I18n.php:95
 msgid "Please share your thoughts..."
 msgstr ""
 
-#: includes/I18n.php:97
+#: includes/I18n.php:96
 msgid "Want a better FileBird?"
 msgstr ""
 
-#: includes/I18n.php:98
+#: includes/I18n.php:97
 msgid ""
 "Sorry to see you walk away, please share why you want to deactivate FileBird?"
 msgstr ""
 
-#: includes/I18n.php:99
+#: includes/I18n.php:98
 msgid "Folder Limit Reached"
 msgstr ""
 
-#: includes/I18n.php:100
+#: includes/I18n.php:99
 msgid ""
 "<p>FileBird Lite version supports up to 10 folders.<br>Please upgrade to "
 "have unlimited folders and other premium features!</p>\n"
@@ -439,40 +523,40 @@ msgid ""
 "        </ul>"
 msgstr ""
 
-#: includes/I18n.php:110
+#: includes/I18n.php:109
 msgid "Including Divi, Fusion, Thrive Architect, WPBakery..."
 msgstr ""
 
-#: includes/I18n.php:111
+#: includes/I18n.php:110
 msgid "Upgrade to FileBird Pro now"
 msgstr ""
 
-#: includes/I18n.php:112
+#: includes/I18n.php:111
 msgid "Success."
 msgstr ""
 
-#: includes/I18n.php:113
+#: includes/I18n.php:112
 msgid "Congratulations. Successfully imported!"
 msgstr ""
 
-#: includes/I18n.php:114
+#: includes/I18n.php:113
 msgid "Go To Media"
 msgstr ""
 
-#: includes/I18n.php:116
+#: includes/I18n.php:115
 msgid ""
 "You're using the new FileBird 4. Please import database to view your folders "
 "correctly."
 msgstr ""
 
-#: includes/I18n.php:117
+#: includes/I18n.php:116
 msgid "Import now"
 msgstr ""
 
-#: includes/I18n.php:118
+#: includes/I18n.php:117
 msgid ""
-"Import failed. Please try again or contact our support https://ninjateam.org/"
-"support."
+"Import failed. Please try again or <a href=\"https://ninjateam.org/support\" "
+"target=\"_blank\">contact our support</a>."
 msgstr ""
 
 #: includes/Lib/plugin-update-checker/Puc/v4p9/Plugin/Ui.php:54
@@ -515,16 +599,13 @@ msgstr ""
 msgid "There is no changelog available."
 msgstr ""
 
+#. Plugin Name of the plugin/theme
 #: includes/Page/Settings.php:36 includes/Page/Settings.php:37
 msgid "FileBird"
 msgstr ""
 
 #: includes/Page/Settings.php:53
 msgid "Documentation"
-msgstr ""
-
-#: includes/Page/Settings.php:67
-msgid "Go Pro"
 msgstr ""
 
 #: views/pages/html-settings.php:18 views/pages/html-settings.php:28
@@ -653,11 +734,7 @@ msgid "Generate"
 msgstr ""
 
 #: views/particle/folder_dropdown.php:2
-msgid "Choose Folder: "
-msgstr ""
-
-#. Plugin Name of the plugin/theme
-msgid "FileBird Lite"
+msgid "Choose folder: "
 msgstr ""
 
 #. Plugin URI of the plugin/theme

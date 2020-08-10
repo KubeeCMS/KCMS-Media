@@ -7,11 +7,11 @@ use FileBird\Model\Folder as FolderModel;
 
 class Tree {
 
-    public static function getFolders($order_by = null, $flat = false) {
+    public static function getFolders($order_by = null, $flat = false, $level = 0, $show_level = false) {
         $folders_from_db = FolderModel::allFolders('*', null, $order_by);
         $default_folders = array();
         
-        $tree = self::getTree($folders_from_db, 0, $default_folders, $flat);
+        $tree = self::getTree($folders_from_db, 0, $default_folders, $flat, $level, $show_level);
         return $tree;
     }
     public static function getCount($folder_id) {
@@ -31,14 +31,14 @@ class Tree {
         wp_reset_postdata();
         return $count;
     }
-    private static function getTree($data, $parent = 0, $default = null,  $flat = false) {
+    private static function getTree($data, $parent = 0, $default = null,  $flat = false, $level = 0, $show_level = false) {
       $tree = is_null($default) ? array() : $default;
       foreach($data as $k => $v) {
         if($v->parent == $parent) {
-          $children = self::getTree($data, $v->id, null);
+          $children = self::getTree($data, $v->id, null, $flat, $level + 1, $show_level);
           $f = array(
             'id' => (int)$v->id,
-            'text' => $v->name,
+            'text' => $show_level ? str_repeat('-', $level) . $v->name : $v->name,
             'li_attr' => array("data-count" => self::getCount((int)$v->id), "data-parent" => (int)$parent),
             'count' => self::getCount((int)$v->id)
           );

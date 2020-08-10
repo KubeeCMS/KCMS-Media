@@ -1,5 +1,5 @@
-<div style="margin-bottom: 10px">
-  <label for="fbv"><?php _e('Choose Folder: ', 'filebird') ?></label>
+<div class="fbv-upload-inline">
+  <label for="fbv"><?php _e('Choose folder: ', 'filebird') ?></label>
   <div id="fbv-folder-selector" class="fbv-folder-selector" name="fbv"></div>
   <!-- <select name="fbv" id="fbv" class="fbv"> -->
   <?php

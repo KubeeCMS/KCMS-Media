@@ -15,7 +15,7 @@
  * Plugin Name:  KCMS Media
  * Plugin URI:   https://github.com/KubeeCMS/KCMS-Media/
  * Description:  Organize media files into folders/ categories at ease.
- * Version:      4.0.4
+ * Version:      4.0.5
  * Author:       KubeeCMS - KUBEE
  * Author URI:   https://github.com/KubeeCMS/
  * License:      GPL-2.0-or-later

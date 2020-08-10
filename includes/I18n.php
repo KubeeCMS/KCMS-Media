@@ -114,7 +114,7 @@ class I18n {
       'update_noti_title' => __('FileBird 4 Update Required', 'filebird'),
       'update_noti_desc' => __('You\'re using the new FileBird 4. Please import database to view your folders correctly.', 'filebird'),
       'update_noti_btn' => __('Import now', 'filebird'),
-      'import_failed' => __('Import failed. Please try again or contact our support https://ninjateam.org/support.', 'filebird')
+      'import_failed' => __('Import failed. Please try again or <a href="https://ninjateam.org/support" target="_blank">contact our support</a>.', 'filebird')
     );
     return $translation;
   }
